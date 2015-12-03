@@ -1,11 +1,14 @@
 body{
-  background: black;
+  background-image: url('/css/spaceBG.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 #GameBoard {
   width: 1000px;
   height: 800px;
-  background-color: blue;
+  background-color: RGBA(36, 70, 81, .9);
+  border: 5px solid RGBA(24, 43, 62, 1);
 }
 .row {
   height: 50px;
