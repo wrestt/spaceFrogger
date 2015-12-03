@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title>Calc</title>
-    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="/css/master.css" >
     <script src="https://fb.me/react-0.14.3.js"></script>
     <script src="https://fb.me/react-dom-0.14.3.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/2.4.2/math.js"></script>
@@ -22,7 +22,7 @@
           timer () {
             clearInterval(id);
             this.setState({ time: this.state.time + 1});
-            id = setInterval(this.timer, 1000)
+            id = setInterval(this.timer, 6)
           },
 
           componentDidMount: function() {
@@ -68,8 +68,8 @@
           getInitialState: function() {
             var select = Math.floor(Math.random()* 2);
             var size = {
-                '0': 50,
-                '1': 20
+                '0': 94,
+                '1': 39
             };
             return { select: select,
                      location: Math.floor(Math.random()* 1000),
@@ -89,7 +89,7 @@
           render: function() {
             return <div
               className={`Astroid${this.state.select}`}
-              data-location= {this.state.location}
+              style={{left: this.state.location - (this.state.size / 3) + 'px'}}
               data-size= {this.state.size}
               >
             </div>;
@@ -99,12 +99,13 @@
         var Row = React.createClass({
 
           getInitialState: function() {
+            var velocity = 2 + Math.floor(Math.random() * 4)
             var select = Math.floor(Math.random()* 2);
             var direction = {
                 '0': -1,
                 '1': 1
             };
-            return { speed: 10,
+            return { speed: velocity,
                      direction: direction[select],
                      number: 5 };
           },
@@ -114,7 +115,7 @@
             for (var i = 0; i < this.state.number; i++) {
               astroids.push(<Astroid time={this.props.time} speed={this.state.speed} direction={this.state.direction}/>);
             }
-            return <div onClick={this.handleClick} id="row">
+            return <div onClick={this.handleClick} className="row">
               {astroids}
             </div>;
           }
