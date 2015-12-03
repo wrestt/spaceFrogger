@@ -32,6 +32,7 @@
 
           render: function() {
             return <div id="GameBoard">
+              <SpaceStation />
               <Row time={this.state.time} />
               <Row time={this.state.time} />
               <Row time={this.state.time} />
@@ -54,12 +55,15 @@
 
         var SpaceStation = React.createClass({
           getInitialState: function() {
-            return { expression: ''};
+            return { loactions: ''};
           },
 
           render: function() {
-            return <div id="spaceStation">
-
+            return <div className="landingrow">
+              <div className="landing"></div>
+              <div className="landing"></div>
+              <div className="landing"></div>
+              <div className="landing"></div>
             </div>;
           }
         });

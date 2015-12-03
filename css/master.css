@@ -13,12 +13,24 @@ body{
 #GameBoard {
   width: 1000px;
   height: 800px;
-  background-color: RGBA(36, 70, 81, .9);
-  border: 5px solid RGBA(24, 43, 62, 1);
 }
 .row {
   height: 50px;
   padding: 50px 0;
+}
+
+.landingrow {
+  height: 50px;
+  padding: 50px 0 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.landing {
+  width: 130px;
+  height: 130px;
+  background-image: url('landing.png');
+  background-repeat: no-repeat;
 }
 
 .Astroid0 {
