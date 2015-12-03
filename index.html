@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Calc</title>
+    <link rel="stylesheet" href="main.css">
+    <script src="https://fb.me/react-0.14.3.js"></script>
+    <script src="https://fb.me/react-dom-0.14.3.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/2.4.2/math.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.js"></script>
+  </head>
+  <body>
+    <div id="container">
+      <script type="text/babel">
+
+        var id = false;
+        var GameBoard = React.createClass({
+          getInitialState: function() {
+            return { time: 0 };
+          },
+
+          timer () {
+            clearInterval(id);
+            this.setState({ time: this.state.time + 1});
+            id = setInterval(this.timer, 1000)
+          },
+
+          componentDidMount: function() {
+            this.timer();
+          },
+
+
+          render: function() {
+            return <div id="GameBoard">
+              <Row time={this.state.time} />
+              <Row time={this.state.time} />
+              <Row time={this.state.time} />
+              <Row time={this.state.time} />
+            </div>;
+          }
+        });
+
+        var Astro = React.createClass({
+          getInitialState: function() {
+            return { expression: ''};
+          },
+
+          render: function() {
+            return <div id="astro">
+
+            </div>;
+          }
+        });
+
+        var SpaceStation = React.createClass({
+          getInitialState: function() {
+            return { expression: ''};
+          },
+
+          render: function() {
+            return <div id="spaceStation">
+
+            </div>;
+          }
+        });
+
+        var Astroid = React.createClass({
+          getInitialState: function() {
+            var select = Math.floor(Math.random()* 2);
+            var size = {
+                '0': 50,
+                '1': 20
+            };
+            return { select: select,
+                     location: Math.floor(Math.random()* 1000),
+                     size: size[select]
+            };
+          },
+
+          componentWillReceiveProps: function() {
+            console.log('updating');
+            var nextValue = (this.state.location +(this.props.speed * this.props.direction)) % 1000;
+            if (nextValue <= 0) {
+              nextValue =+ 1000;
+            }
+            this.setState({ location: nextValue });
+          },
+
+          render: function() {
+            return <div
+              className={`Astroid${this.state.select}`}
+              data-location= {this.state.location}
+              data-size= {this.state.size}
+              >
+            </div>;
+          }
+        });
+
+        var Row = React.createClass({
+
+          getInitialState: function() {
+            var select = Math.floor(Math.random()* 2);
+            var direction = {
+                '0': -1,
+                '1': 1
+            };
+            return { speed: 10,
+                     direction: direction[select],
+                     number: 5 };
+          },
+
+          render: function() {
+            var astroids = [];
+            for (var i = 0; i < this.state.number; i++) {
+              astroids.push(<Astroid time={this.props.time} speed={this.state.speed} direction={this.state.direction}/>);
+            }
+            return <div onClick={this.handleClick} id="row">
+              {astroids}
+            </div>;
+          }
+        });
+
+
+        ReactDOM.render(
+          <GameBoard />,
+          document.getElementById('container')
+        );
+      </script>
+    </div>
+  </body>
+</html>
