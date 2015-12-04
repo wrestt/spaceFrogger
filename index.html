@@ -16,7 +16,9 @@
         var id = false;
         var GameBoard = React.createClass({
           getInitialState: function() {
-            return { time: 0 };
+            return { time: 0,
+                     level: 1
+            };
           },
 
           timer () {
@@ -33,10 +35,11 @@
           render: function() {
             return <div id="GameBoard">
               <SpaceStation />
-              <Row time={this.state.time} />
-              <Row time={this.state.time} />
-              <Row time={this.state.time} />
-              <Row time={this.state.time} />
+              <Row time={this.state.time} level={this.state.level - .2} />
+              <Row time={this.state.time} level={this.state.level + .3} />
+              <Row time={this.state.time} level={this.state.level + .1} />
+              <Row time={this.state.time} level={this.state.level + .2} />
+              <Row time={this.state.time} level={this.state.level} />
               <Ship />
             </div>;
           }
@@ -44,12 +47,12 @@
 
         var Ship = React.createClass({
           getInitialState: function() {
-            return { location: 500};
+            return { location: 6}; //out of 12 steps
           },
 
           render: function() {
             return <div className="startrow">
-              <div id="ship" style={{left: this.state.location+ 'px'}}></div>
+              <div id="ship" style={{left: Math.floor(this.state.location * 116.667) - 35+ 'px'}}></div>
             </div>;
           }
         });
@@ -61,6 +64,7 @@
 
           render: function() {
             return <div className="landingrow">
+              <div className="landing"></div>
               <div className="landing"></div>
               <div className="landing"></div>
               <div className="landing"></div>
@@ -78,7 +82,7 @@
                 '2': 164
             };
             return { select: select,
-                     location: Math.floor(Math.random()* 1000),
+                     location: Math.floor(Math.random()* 1400),
                      size: size[select]
             };
           },
@@ -105,7 +109,7 @@
         var Row = React.createClass({
 
           getInitialState: function() {
-            var velocity = 2 + Math.floor(Math.random() * 4)
+            var velocity = (2 + Math.floor(Math.random() * 3)) * this.props.level;
             var select = Math.floor(Math.random()* 2);
             var direction = {
                 '0': -1,
@@ -126,7 +130,6 @@
             </div>;
           }
         });
-
 
         ReactDOM.render(
           <GameBoard />,
