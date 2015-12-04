@@ -23,6 +23,21 @@ body{
   background-image: url('ship.png');
   position: relative;
 }
+
+#shipL {
+  width: 70px;
+  height: 83px;
+  background-image: url('shipL.png');
+  position: relative;
+}
+
+#shipR {
+  width: 70px;
+  height: 83px;
+  background-image: url('shipR.png');
+  position: relative;
+}
+
 .row {
   align-content: space-between;
   height: 100px;
