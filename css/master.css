@@ -22,18 +22,17 @@ body{
   position: relative;
 }
 .row {
-  height: 50px;
-  padding: 50px 0;
+  align-content: space-between;
+  height: 100px;
 }
 
 .startrow {
-  height: 50px;
-  padding: 50px 0;
+  height: 100px;
 }
 
 .landingrow {
-  height: 50px;
-  padding: 50px 0 0;
+  height: 130px;
+  margin: 50px 0 0;
   display: flex;
   justify-content: space-between;
 }
@@ -48,6 +47,7 @@ body{
 .Astroid0 {
   height: 61px;
   width: 94px;
+  margin-bottom: -51px;
   background-image: url('rock1.png');
   background-repeat: no-repeat;
   position: relative;
@@ -56,6 +56,7 @@ body{
 .Astroid1 {
   height: 36px;
   width: 39px;
+  margin-bottom: -25px;
   background-image: url('rock2.png');
   background-repeat: no-repeat;
   position: relative;
