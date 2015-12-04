@@ -16,83 +16,159 @@
         var id = false;
         var GameBoard = React.createClass({
           getInitialState: function() {
-            return { time: 0,
-                     level: 1
+            var astroidsPerRow = 5;
+            var numberOfRows = 5;
+            var rows = [];
+            var speedAdjustment = [-.2, .3, .1, .2, 0];
+            var rowsSpeed = [];
+            var rowsDirection = [];
+            var astroidsLocation = [];
+            var astroidsSize = [];
+            var astroidsSelect = [];
+            var astroidsSizeChart = {
+                '0': 94,
+                '1': 39,
+                '2': 164
             };
+
+            for (var i = 0; i < numberOfRows; i++) {
+              var velocity = (2 + Math.floor(Math.random() * 3));
+              var select = Math.floor(Math.random()* 2);
+              var direction = {
+                  '0': -1,
+                  '1': 1
+              };
+              rowsSpeed.push(velocity + speedAdjustment[i]);
+              rowsDirection.push(direction[select]);
+              astroidsLocation.push([]);
+              astroidsSize.push([]);
+              astroidsSelect.push([]);
+              for (var j = 0; j < astroidsPerRow; j++) {
+                astroidsLocation[i].push(Math.floor(Math.random()* 1400));
+                astroidsSelect[i].push(Math.floor(Math.random()* 3).toString());
+                astroidsSize[i].push(astroidsSizeChart[astroidsSelect[i][j]]);
+              }
+            }
+
+            //Build locations and select randmons astriods
+
+            return { time: 0,
+                     level: 1000000000000,
+                     shipLocationX: 6,
+                     shipLocationY: 0, //out of 12 steps
+                     shipOrientation: 'ship',
+                     numberOfRows: numberOfRows,
+                     astroidsPerRow: astroidsPerRow,
+                     rowsSpeed: rowsSpeed,
+                     rowsDirection: rowsDirection,
+                     astroidsLocation: astroidsLocation,
+                     astroidsSelect: astroidsSelect,
+                     astroidsSize: astroidsSize
+            };
+          },
+
+          shipControls: function(e) {
+            if (e.which === 37 && this.state.shipLocationX !== 0) {
+              this.setState({ shipOrientation: 'shipL', shipLocationX: this.state.shipLocationX - 1})
+            } else if (e.which === 38 && this.state.shipLocationY !== 6) {
+              this.setState({ shipOrientation: 'ship', shipLocationY: this.state.shipLocationY + 1})
+            } else if (e.which === 39 && this.state.shipLocationX !== 12) {
+              this.setState({ shipOrientation: 'shipR', shipLocationX: this.state.shipLocationX + 1})
+            } else if (e.which === 40 && this.state.shipLocationY !== 0) {
+              this.setState({ shipOrientation: 'ship', shipLocationY: this.state.shipLocationY - 1})
+            } else {
+              console.log('PLEASE USE ARROW KEYS TO MOVE AROUND THE BOARD');
+            }
+          },
+
+          updateLocation: function() {
+            var nextValue = [];
+            for (var i = 0; i < this.state.numberOfRows; i++) {
+              nextValue.push([]);
+              for (var j = 0; j < this.state.astroidsPerRow; j++) {
+                nextValue[i].push((this.state.astroidsLocation[i][j] +(this.state.rowsSpeed[i] * this.state.rowsDirection[i])) % 1400);
+                if (nextValue[i][j] <= 0) {
+                  nextValue[i][j] =+ 1400;
+                }
+              }
+            }
+            this.setState({ astroidsLocation: nextValue });
+          },
+
+          findCollision: function(row) {
+            if (row !== 0 && row !== 6) {
+              var level = 5 - row;
+              var c = Math.floor(this.state.shipLocationX * 116.667);
+              var d = Math.floor(this.state.shipLocationX * 116.667) + 70;
+              for (var i = 0; i < this.state.numberOfRows; i++) {
+                console.log(level + ' ' + i);
+                var a =this.state.astroidsLocation[level][i];
+                var b =this.state.astroidsLocation[level][i] + this.state.astroidsSize[level][i];
+                console.log(a + ' ' + b + ' ' + c + ' ' + d);
+                if ((a < c && b > c) ||  (a < d && b > c)){
+                  this.setState({ shipLocationY: 0, shipLocationX: 6});
+                  console.log('hit');
+                  break;
+                }
+              }
+            }
           },
 
           timer () {
             clearInterval(id);
             this.setState({ time: this.state.time + 1});
+            this.updateLocation();
+            this.findCollision(this.state.shipLocationY);
             id = requestAnimationFrame(this.timer);
           },
 
           componentDidMount: function() {
             this.timer();
+            document.addEventListener("keydown", this.shipControls);
           },
 
           render: function() {
+            var rows = [];
+            for (var i = 0; i < this.state.numberOfRows; i++) {
+              var astroids = [];
+              for (var j = 0; j < this.state.astroidsPerRow; j++) {
+                astroids.push(
+                  <Astroid
+                    location={this.state.astroidsLocation[i][j]}
+                    size={this.state.astroidsSize[i][j]}
+                    select={this.state.astroidsSelect[i][j]}
+                  />
+                );
+              }
+              rows.push(
+                <Row astroids={astroids} />
+              );
+            }
             return <div id="GameBoard">
               <SpaceStation />
-              <Row time={this.state.time} level={this.state.level - .2} />
-              <Row time={this.state.time} level={this.state.level + .3} />
-              <Row time={this.state.time} level={this.state.level + .1} />
-              <Row time={this.state.time} level={this.state.level + .2} />
-              <Row time={this.state.time} level={this.state.level} />
-              <Ship />
+              {rows}
+              <Ship locationX={this.state.shipLocationX} locationY={this.state.shipLocationY} orientation={this.state.shipOrientation}/>
             </div>;
           }
         });
 
         var Ship = React.createClass({
-          getInitialState: function() {
-            return {
-              locationX: 6,
-              locationY: 0, //out of 12 steps
-              orientation: 'ship'
-            };
-          },
-
-          shipControls: function(e) {
-            console.log(this.state.locationX);
-            if (e.which === 37 && this.state.locationX !== 0) {
-              this.setState({ orientation: 'shipL', locationX: this.state.locationX - 1})
-            } else if (e.which === 38 && this.state.locationY !== 6) {
-              this.setState({ orientation: 'ship', locationY: this.state.locationY + 1})
-            } else if (e.which === 39 && this.state.locationX !== 12) {
-              this.setState({ orientation: 'shipR', locationX: this.state.locationX + 1})
-            } else if (e.which === 40 && this.state.locationY !== 0) {
-              this.setState({ orientation: 'ship', locationY: this.state.locationY - 1})
-            } else {
-              console.log('PLEASE USE ARROW KEYS TO MOVE AROUND THE BOARD');
-            }
-            console.log(this.state.locationX);
-          },
-
-          componentDidMount: function() {
-            document.addEventListener("keydown", this.shipControls);
-          },
-
           render: function() {
-            var locationX = Math.floor(this.state.locationX * 116.667) - 35;
-            if (this.state.locationX === 0) {
+            var locationX = Math.floor(this.props.locationX * 116.667) - 35;
+            if (this.props.locationX === 0) {
               locationX = 0;
-            } else if (this.state.locationX === 12) {
+            } else if (this.props.locationX === 12) {
               locationX = 1330;
             }
-            var locationY = this.state.locationY * 100;
+            var locationY = this.props.locationY * 100;
 
             return <div className="startrow">
-              <div id={this.state.orientation} style={{left: locationX + 'px', bottom: locationY + 'px'}}></div>
+              <div id={this.props.orientation} style={{left: locationX + 'px', bottom: locationY + 'px'}}></div>
             </div>;
           }
         });
 
         var SpaceStation = React.createClass({
-          getInitialState: function() {
-            return { locaions: ''};
-          },
-
           render: function() {
             return <div className="landingrow">
               <div className="landing"></div>
@@ -105,58 +181,20 @@
         });
 
         var Astroid = React.createClass({
-          getInitialState: function() {
-            var select = Math.floor(Math.random()* 3);
-            var size = {
-                '0': 94,
-                '1': 39,
-                '2': 164
-            };
-            return { select: select,
-                     location: Math.floor(Math.random()* 1400),
-                     size: size[select]
-            };
-          },
-
-          componentWillReceiveProps: function() {
-            var nextValue = (this.state.location +(this.props.speed * this.props.direction)) % 1400;
-            if (nextValue <= 0) {
-              nextValue =+ 1400;
-            }
-            this.setState({ location: nextValue });
-          },
-
           render: function() {
             return <div
-              className={`Astroid${this.state.select}`}
-              style={{left: this.state.location - (this.state.size / 3) + 'px'}}
-              data-size= {this.state.size}
+              className={`Astroid${this.props.select}`}
+              style={{left: this.props.location - (this.props.size / 3) + 'px'}}
+              data-size= {this.props.size}
               >
             </div>;
           }
         });
 
         var Row = React.createClass({
-
-          getInitialState: function() {
-            var velocity = (2 + Math.floor(Math.random() * 3)) * this.props.level;
-            var select = Math.floor(Math.random()* 2);
-            var direction = {
-                '0': -1,
-                '1': 1
-            };
-            return { speed: velocity,
-                     direction: direction[select],
-                     number: 5 };
-          },
-
           render: function() {
-            var astroids = [];
-            for (var i = 0; i < this.state.number; i++) {
-              astroids.push(<Astroid time={this.props.time} speed={this.state.speed} direction={this.state.direction}/>);
-            }
-            return <div onClick={this.handleClick} className="row">
-              {astroids}
+            return <div className="row">
+              {this.props.astroids}
             </div>;
           }
         });
