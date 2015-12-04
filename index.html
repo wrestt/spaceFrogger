@@ -32,40 +32,39 @@
 
           render: function() {
             return <div id="GameBoard">
+              <SpaceStation />
               <Row time={this.state.time} />
               <Row time={this.state.time} />
               <Row time={this.state.time} />
               <Row time={this.state.time} />
+              <Ship />
             </div>;
           }
         });
 
-        var Astro = React.createClass({
+        var Ship = React.createClass({
           getInitialState: function() {
-            return { expression: []};
-          },
-
-          handleKeyDown: function (event) {
-            var nextEvents = this.state.expression;
-            nextEvents.push(event.which);
-            this.setState({ expression: nextEvents});
+            return { location: 500};
           },
 
           render: function() {
-            return <div id="astro">
-              onKeyDown={this.handleKeyDown}
+            return <div className="startrow">
+              <div id="ship" style={{left: this.state.location+ 'px'}}></div>
             </div>;
           }
         });
 
         var SpaceStation = React.createClass({
           getInitialState: function() {
-            return { expression: ''};
+            return { loactions: ''};
           },
 
           render: function() {
-            return <div id="spaceStation">
-
+            return <div className="landingrow">
+              <div className="landing"></div>
+              <div className="landing"></div>
+              <div className="landing"></div>
+              <div className="landing"></div>
             </div>;
           }
         });
