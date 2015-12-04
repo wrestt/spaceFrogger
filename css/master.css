@@ -21,6 +21,7 @@ body{
   width: 70px;
   height: 83px;
   background-image: url('ship.png');
+  background-repeat: no-repeat;
   position: relative;
 }
 
@@ -28,6 +29,7 @@ body{
   width: 70px;
   height: 83px;
   background-image: url('shipL.png');
+  background-repeat: no-repeat;
   position: relative;
 }
 
@@ -35,6 +37,7 @@ body{
   width: 70px;
   height: 83px;
   background-image: url('shipR.png');
+  background-repeat: no-repeat;
   position: relative;
 }
 
