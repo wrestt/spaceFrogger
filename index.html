@@ -17,54 +17,22 @@
         var GameBoard = React.createClass({
           getInitialState: function() {
             return { time: 0,
-                     level: 1,
-                     arrowDirection: '',
-                     arrowEvent: []
+                     level: 1
             };
           },
 
           timer () {
             clearInterval(id);
             this.setState({ time: this.state.time + 1});
-            id = setInterval(this.timer, 6)
+            id = requestAnimationFrame(this.timer);
           },
 
           componentDidMount: function() {
             this.timer();
           },
 
-          handleChange: function (event) {
-            var nextLocation = event.target.arrowDirection;
-            this.setState({ arrowDirection});
-          },
-
-          handleKeyDown: function (event) {
-            console.log(event);
-            var nextLocation= this.state.arrowEvent;
-            arrowEvent.push(event.which);
-            this.setState({ arrowEvent});
-          },
-
-          handleKeyPress: function (event) {
-            var nextLocation = this.state.arrowEvent;
-            arrowEvent.push( event.which );
-            this.setState({ arrowEvent });
-          },
-
-          // handleKeyUp: function (event) {
-          //   var nextLocation = this.state.arrowEvent;
-          //   arrowEvent = [];
-          //   this.setState({arrowEvent})
-          // },
-
-
           render: function() {
-            return <div id="GameBoard"
-              onChange={this.handleChange}
-              onKeyDown={this.handleKeyDown}
-              onKeyPress={this.handleKeyPress}
-              onKeyUp={this.handleKeyUp}
-             >
+            return <div id="GameBoard">
               <SpaceStation />
               <Row time={this.state.time} level={this.state.level - .2} />
               <Row time={this.state.time} level={this.state.level + .3} />
@@ -79,6 +47,25 @@
         var Ship = React.createClass({
           getInitialState: function() {
             return { location: 6}; //out of 12 steps
+          },
+
+          shipControls: function(e) {
+            console.log(e.which);
+            if (e.which === 37 && this.state.location !== 0) {
+              this.setState({ loaction: this.state.location--});
+            } else if (e.which === 38) {
+              //move up
+            } else if (e.which === 39 && this.state.location !== 12) {
+              this.setState({ loaction: this.state.location++});
+            } else if (e.which === 40) {
+              //move down
+            } else {
+              console.log('PLEASE USE ARROW KEYS TO MOVE AROUND THE BOARD');
+            }
+          },
+
+          componentDidMount: function() {
+            document.addEventListener("keydown", this.shipControls);
           },
 
           render: function() {
@@ -119,7 +106,6 @@
           },
 
           componentWillReceiveProps: function() {
-            console.log('updating');
             var nextValue = (this.state.location +(this.props.speed * this.props.direction)) % 1400;
             if (nextValue <= 0) {
               nextValue =+ 1400;

@@ -67,6 +67,7 @@ body{
 .Astroid2 {
   height: 64px;
   width: 164px;
+  margin-bottom: -54px;
   background-image: url('rock3.png');
   background-repeat: no-repeat;
   position: relative;
