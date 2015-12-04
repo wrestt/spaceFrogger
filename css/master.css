@@ -13,8 +13,8 @@ body{
 #GameBoard {
   width: 1400px;
   height: 800px;
-  background-color: RGBA(36, 70, 81, .9);
-  border: 10px solid RGBA(24, 43, 62, 1);
+  /*background-color: RGBA(36, 70, 81, .9);
+  border: 10px solid RGBA(24, 43, 62, 1);*/
 }
 
 #ship {
