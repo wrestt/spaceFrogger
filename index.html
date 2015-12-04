@@ -88,9 +88,9 @@
 
           componentWillReceiveProps: function() {
             console.log('updating');
-            var nextValue = (this.state.location +(this.props.speed * this.props.direction)) % 1000;
+            var nextValue = (this.state.location +(this.props.speed * this.props.direction)) % 1400;
             if (nextValue <= 0) {
-              nextValue =+ 1000;
+              nextValue =+ 1400;
             }
             this.setState({ location: nextValue });
           },
