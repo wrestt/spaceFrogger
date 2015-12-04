@@ -37,18 +37,19 @@
               <Row time={this.state.time} />
               <Row time={this.state.time} />
               <Row time={this.state.time} />
+              <Ship />
             </div>;
           }
         });
 
-        var Astro = React.createClass({
+        var Ship = React.createClass({
           getInitialState: function() {
-            return { expression: ''};
+            return { location: 500};
           },
 
           render: function() {
-            return <div id="astro">
-
+            return <div className="startrow">
+              <div id="ship" style={{left: this.state.location+ 'px'}}></div>
             </div>;
           }
         });
