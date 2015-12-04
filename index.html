@@ -47,12 +47,12 @@
 
         var Ship = React.createClass({
           getInitialState: function() {
-            return { location: 500};
+            return { location: 6}; //out of 12 steps
           },
 
           render: function() {
             return <div className="startrow">
-              <div id="ship" style={{left: this.state.location+ 'px'}}></div>
+              <div id="ship" style={{left: Math.floor(this.state.location * 116.667) - 35+ 'px'}}></div>
             </div>;
           }
         });
