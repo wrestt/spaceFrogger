@@ -42,12 +42,18 @@
 
         var Astro = React.createClass({
           getInitialState: function() {
-            return { expression: ''};
+            return { expression: []};
+          },
+
+          handleKeyDown: function (event) {
+            var nextEvents = this.state.expression;
+            nextEvents.push(event.which);
+            this.setState({ expression: nextEvents});
           },
 
           render: function() {
             return <div id="astro">
-
+              onKeyDown={this.handleKeyDown}
             </div>;
           }
         });
@@ -66,10 +72,11 @@
 
         var Astroid = React.createClass({
           getInitialState: function() {
-            var select = Math.floor(Math.random()* 2);
+            var select = Math.floor(Math.random()* 3);
             var size = {
                 '0': 94,
-                '1': 39
+                '1': 39,
+                '2': 164
             };
             return { select: select,
                      location: Math.floor(Math.random()* 1000),

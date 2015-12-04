@@ -14,7 +14,7 @@ body{
   width: 1000px;
   height: 800px;
   background-color: RGBA(36, 70, 81, .9);
-  border: 5px solid RGBA(24, 43, 62, 1);
+  border: 10px solid RGBA(24, 43, 62, 1);
 }
 .row {
   height: 50px;
@@ -33,6 +33,14 @@ body{
   height: 36px;
   width: 39px;
   background-image: url('rock2.png');
+  background-repeat: no-repeat;
+  position: relative;
+}
+
+.Astroid2 {
+  height: 64px;
+  width: 164px;
+  background-image: url('rock3.png');
   background-repeat: no-repeat;
   position: relative;
 }
