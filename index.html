@@ -101,13 +101,10 @@
               var c = Math.floor(this.state.shipLocationX * 116.667);
               var d = Math.floor(this.state.shipLocationX * 116.667) + 70;
               for (var i = 0; i < this.state.numberOfRows; i++) {
-                console.log(level + ' ' + i);
                 var a =this.state.astroidsLocation[level][i];
                 var b =this.state.astroidsLocation[level][i] + this.state.astroidsSize[level][i];
-                console.log(a + ' ' + b + ' ' + c + ' ' + d);
                 if ((a < c && b > c) ||  (a < d && b > c)){
                   this.setState({ shipLocationY: 0, shipLocationX: 6});
-                  console.log('hit');
                   break;
                 }
               }
