@@ -111,6 +111,10 @@
                   break;
                 }
               }
+            } else if (row === 6) {
+                if (this.state.shipLocationX % 3 !== 0) {
+                  this.setState({ shipLocationY: 0, shipLocationX: 6});
+                }
             }
           },
 
