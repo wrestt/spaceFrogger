@@ -16,7 +16,7 @@
         var id = false;
         var GameBoard = React.createClass({
           getInitialState: function() {
-            var score = 0;
+            var score = 10000;
             var gameLevel = 0;
             var lives = 3;
             var astroidsPerRow = 5;
@@ -56,7 +56,6 @@
             //Build locations and select randmons astriods
 
             return { time: 0,
-              level: 1000000000000,
               lives: lives,
               score: score,
               gameLevel: gameLevel,
@@ -102,6 +101,7 @@
           },
 
           findCollision: function(row) {
+            this.setState({score: this.state.score - Math.floor(this.state.time / 100)});
             if (row !== 0 && row !== 6) {
               var level = 5 - row;
               var c = Math.floor(this.state.shipLocationX * 116.667);
@@ -110,13 +110,15 @@
                 var a =this.state.astroidsLocation[level][i];
                 var b =this.state.astroidsLocation[level][i] + this.state.astroidsSize[level][i];
                 if ((a < c && b > c) ||  (a < d && b > c)){
-                  this.setState({ shipLocationY: 0, shipLocationX: 6});
+                  this.setState({ shipLocationY: 0, shipLocationX: 6, lives: this.state.lives - 1});
                   break;
                 }
               }
             } else if (row === 6) {
                 if (this.state.shipLocationX % 3 !== 0) {
-                  this.setState({ shipLocationY: 0, shipLocationX: 6});
+                  this.setState({ shipLocationY: 0, shipLocationX: 6, lives: this.state.lives - 1});
+                } else {
+                  this.setState({ shipLocationY: 0, shipLocationX: 6, gameLevel: this.state.gameLevel + 1, score: this.state.score + 10000});
                 }
             }
           },
