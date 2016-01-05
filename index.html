@@ -17,6 +17,7 @@
         var GameBoard = React.createClass({
           getInitialState: function() {
             var score = 0;
+            var levelTime = 0;
             var levelScore = 10000;
             var gameLevel = 1;
             var lives = 3;
@@ -57,11 +58,11 @@
             //Build locations and select randmons astriods
 
             return { time: 0,
-              level: 1000000000000,
               lives: lives,
               score: score,
               levelScore: levelScore,
               gameLevel: gameLevel,
+              levelTime: levelTime,
               shipLocationX: 6,
               shipLocationY: 0, //out of 12 steps
               shipOrientation: 'ship',
@@ -104,36 +105,39 @@
           },
 
           findCollision: function(row) {
-            if (this.state.levelScore > 0) {
-              this.setState({levelScore: (this.state.levelScore * this.state.gameLevel) - Math.floor(this.state.time / 100)})
-            } else {
-              this.setState({levelScore: 0})
-            }
+              if (this.state.levelScore > 0) {
+                this.setState({levelScore: (10000 * (this.state.gameLevel)) - Math.floor(this.state.levelTime)})
+              } else {
+                this.setState({levelScore: 0})
+              }
+
             if (row !== 0 && row !== 6) {
               var level = 5 - row;
               var c = Math.floor(this.state.shipLocationX * 116.667);
               var d = Math.floor(this.state.shipLocationX * 116.667) + 70;
               for (var i = 0; i < this.state.numberOfRows; i++) {
-                console.log(level + ' ' + i);
                 var a =this.state.astroidsLocation[level][i];
                 var b =this.state.astroidsLocation[level][i] + this.state.astroidsSize[level][i];
-                console.log(a + ' ' + b + ' ' + c + ' ' + d);
                 if ((a < c && b > c) ||  (a < d && b > c)){
-                  this.setState({ shipLocationY: 0, shipLocationX: 6});
-                  console.log('hit');
+                  this.setState({ shipLocationY: 0, shipLocationX: 6, lives: this.state.lives - 1});
+                  if (this.state.lives === 0) {
+                    this.setState({ shipLocationY: 0, shipLocationX: 6, lives: 3, gameLevel: 1, score: 0, levelScore: 10000, levelTime: 0});
+                  }
                   break;
                 }
               }
             } else if (row === 6) {
                 if (this.state.shipLocationX % 3 !== 0) {
-                  this.setState({ shipLocationY: 0, shipLocationX: 6});
+                  this.setState({ shipLocationY: 0, shipLocationX: 6, lives: this.state.lives - 1});
+                } else {
+                  this.setState({ shipLocationY: 0, shipLocationX: 6, gameLevel: this.state.gameLevel + 1, score: this.state.score + this.state.levelScore, levelScore: 10000 * this.state.gameLevel, levelTime: 0});
                 }
             }
           },
 
           timer () {
             clearInterval(id);
-            this.setState({ time: this.state.time + 1});
+            this.setState({ time: this.state.time + 1, levelTime: this.state.levelTime + 1});
             this.updateLocation();
             this.findCollision(this.state.shipLocationY);
             id = requestAnimationFrame(this.timer);
