@@ -18,7 +18,10 @@
           getInitialState: function() {
             var nextLevel = false;
             var score = 10000;
-            var gameLevel = 0;
+            var score = 0;
+            var levelTime = 0;
+            var levelScore = 10000;
+            var gameLevel = 1;
             var lives = 3;
             var astroidsPerRow = 1;
             var numberOfRows = 5;
@@ -60,7 +63,9 @@
               nextLevel: nextLevel,
               lives: lives,
               score: score,
+              levelScore: levelScore,
               gameLevel: gameLevel,
+              levelTime: levelTime,
               shipLocationX: 6,
               shipLocationY: 0, //out of 12 steps
               shipOrientation: 'ship',
@@ -105,7 +110,12 @@
           },
 
           findCollision: function(row) {
-            this.setState({score: this.state.score - Math.floor(this.state.time / 100)});
+              if (this.state.levelScore > 0) {
+                this.setState({levelScore: (10000 * (this.state.gameLevel)) - Math.floor(this.state.levelTime)})
+              } else {
+                this.setState({levelScore: 0})
+              }
+
             if (row !== 0 && row !== 6) {
               var level = 5 - row;
               var c = Math.floor(this.state.shipLocationX * 116.667);
@@ -115,6 +125,9 @@
                 var b =this.state.astroidsLocation[level][i] + this.state.astroidsSize[level][i];
                 if ((a < c && b > c) ||  (a < d && b > c)){
                   this.setState({ shipLocationY: 0, shipLocationX: 6, lives: this.state.lives - 1});
+                  if (this.state.lives === 0) {
+                    this.setState({ shipLocationY: 0, shipLocationX: 6, lives: 3, gameLevel: 1, score: 0, levelScore: 10000, levelTime: 0});
+                  }
                   break;
                 }
               }
@@ -122,14 +135,14 @@
                 if (this.state.shipLocationX % 3 !== 0) {
                   this.setState({ shipLocationY: 0, shipLocationX: 6, lives: this.state.lives - 1});
                 } else {
-                  this.setState({ shipLocationY: 0, shipLocationX: 6, gameLevel: this.state.gameLevel + 1, score: this.state.score + 10000, astroidsPerRow: this.state.gameLevel + 1, nextLevel: true});
+                  this.setState({ shipLocationY: 0, shipLocationX: 6, gameLevel: this.state.gameLevel + 1, score: this.state.score + this.state.levelScore, levelScore: 10000 * this.state.gameLevel, levelTime: 0, astroidsPerRow: this.state.gameLevel + 1, nextLevel: true});
                 }
             }
           },
 
           timer () {
             clearInterval(id);
-            this.setState({ time: this.state.time + 1});
+            this.setState({ time: this.state.time + 1, levelTime: this.state.levelTime + 1});
             this.updateLocation();
             this.findCollision(this.state.shipLocationY);
             id = requestAnimationFrame(this.timer);
@@ -180,7 +193,7 @@
               );
             }
             return <div id="GameBoard">
-              <ScoreBoard gameLevel={this.state.gameLevel} score={this.state.score} lives={this.state.lives}/>
+              <ScoreBoard gameLevel={this.state.gameLevel} score={this.state.score}  levelScore={this.state.levelScore} lives={this.state.lives} />
               <SpaceStation />
               {rows}
               <Ship locationX={this.state.shipLocationX} locationY={this.state.shipLocationY} orientation={this.state.shipOrientation}/>
@@ -222,6 +235,7 @@
               <div className="level"><h1>Level: {this.props.gameLevel}</h1></div>
               <div className="score"><h1>Score: {this.props.score}</h1></div>
               <div className="lives"><h1>Lives: {this.props.lives}</h1></div>
+              <div className="levlScore"><h1>Level Score: {this.props.levelScore}</h1></div>
             </div>;
           }
         })
