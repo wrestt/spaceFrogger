@@ -17,6 +17,12 @@ body{
   border: 10px solid RGBA(24, 43, 62, 1);*/
 }
 
+.board{
+  display: flex;
+  color: white;
+  justify-content: space-between;
+}
+
 #ship {
   width: 70px;
   height: 83px;

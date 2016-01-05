@@ -16,6 +16,9 @@
         var id = false;
         var GameBoard = React.createClass({
           getInitialState: function() {
+            var score = 0;
+            var gameLevel = 0;
+            var lives = 3;
             var astroidsPerRow = 5;
             var numberOfRows = 5;
             var rows = [];
@@ -53,17 +56,20 @@
             //Build locations and select randmons astriods
 
             return { time: 0,
-                     level: 1000000000000,
-                     shipLocationX: 6,
-                     shipLocationY: 0, //out of 12 steps
-                     shipOrientation: 'ship',
-                     numberOfRows: numberOfRows,
-                     astroidsPerRow: astroidsPerRow,
-                     rowsSpeed: rowsSpeed,
-                     rowsDirection: rowsDirection,
-                     astroidsLocation: astroidsLocation,
-                     astroidsSelect: astroidsSelect,
-                     astroidsSize: astroidsSize
+              level: 1000000000000,
+              lives: lives,
+              score: score,
+              gameLevel: gameLevel,
+              shipLocationX: 6,
+              shipLocationY: 0, //out of 12 steps
+              shipOrientation: 'ship',
+              numberOfRows: numberOfRows,
+              astroidsPerRow: astroidsPerRow,
+              rowsSpeed: rowsSpeed,
+              rowsDirection: rowsDirection,
+              astroidsLocation: astroidsLocation,
+              astroidsSelect: astroidsSelect,
+              astroidsSize: astroidsSize
             };
           },
 
@@ -146,6 +152,7 @@
               );
             }
             return <div id="GameBoard">
+              <ScoreBoard gameLevel={this.state.gameLevel} score={this.state.score} lives={this.state.lives}/>
               <SpaceStation />
               {rows}
               <Ship locationX={this.state.shipLocationX} locationY={this.state.shipLocationY} orientation={this.state.shipOrientation}/>
@@ -180,6 +187,16 @@
             </div>;
           }
         });
+
+        var ScoreBoard = React.createClass({
+          render: function() {
+            return <div className="board">
+              <div className="level"><h1>Level: {this.props.gameLevel}</h1></div>
+              <div className="score"><h1>Score: {this.props.score}</h1></div>
+              <div className="lives"><h1>Lives: {this.props.lives}</h1></div>
+            </div>;
+          }
+        })
 
         var Astroid = React.createClass({
           render: function() {
