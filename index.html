@@ -17,7 +17,8 @@
         var GameBoard = React.createClass({
           getInitialState: function() {
             var score = 0;
-            var gameLevel = 0;
+            var levelScore = 10000;
+            var gameLevel = 1;
             var lives = 3;
             var astroidsPerRow = 5;
             var numberOfRows = 5;
@@ -59,6 +60,7 @@
               level: 1000000000000,
               lives: lives,
               score: score,
+              levelScore: levelScore,
               gameLevel: gameLevel,
               shipLocationX: 6,
               shipLocationY: 0, //out of 12 steps
@@ -102,6 +104,11 @@
           },
 
           findCollision: function(row) {
+            if (this.state.levelScore > 0) {
+              this.setState({levelScore: (this.state.levelScore * this.state.gameLevel) - Math.floor(this.state.time / 100)})
+            } else {
+              this.setState({levelScore: 0})
+            }
             if (row !== 0 && row !== 6) {
               var level = 5 - row;
               var c = Math.floor(this.state.shipLocationX * 116.667);
@@ -155,7 +162,7 @@
               );
             }
             return <div id="GameBoard">
-              <ScoreBoard gameLevel={this.state.gameLevel} score={this.state.score} lives={this.state.lives}/>
+              <ScoreBoard gameLevel={this.state.gameLevel} score={this.state.score}  levelScore={this.state.levelScore} lives={this.state.lives} />
               <SpaceStation />
               {rows}
               <Ship locationX={this.state.shipLocationX} locationY={this.state.shipLocationY} orientation={this.state.shipOrientation}/>
@@ -197,6 +204,7 @@
               <div className="level"><h1>Level: {this.props.gameLevel}</h1></div>
               <div className="score"><h1>Score: {this.props.score}</h1></div>
               <div className="lives"><h1>Lives: {this.props.lives}</h1></div>
+              <div className="levlScore"><h1>Level Score: {this.props.levelScore}</h1></div>
             </div>;
           }
         })
