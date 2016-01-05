@@ -16,10 +16,11 @@
         var id = false;
         var GameBoard = React.createClass({
           getInitialState: function() {
+            var nextLevel = false;
             var score = 10000;
             var gameLevel = 0;
             var lives = 3;
-            var astroidsPerRow = 5;
+            var astroidsPerRow = 1;
             var numberOfRows = 5;
             var rows = [];
             var speedAdjustment = [-.2, .3, .1, .2, 0];
@@ -56,6 +57,7 @@
             //Build locations and select randmons astriods
 
             return { time: 0,
+              nextLevel: nextLevel,
               lives: lives,
               score: score,
               gameLevel: gameLevel,
@@ -65,6 +67,8 @@
               numberOfRows: numberOfRows,
               astroidsPerRow: astroidsPerRow,
               rowsSpeed: rowsSpeed,
+              speedAdjustment: speedAdjustment,
+              astroidsSizeChart: astroidsSizeChart,
               rowsDirection: rowsDirection,
               astroidsLocation: astroidsLocation,
               astroidsSelect: astroidsSelect,
@@ -118,7 +122,7 @@
                 if (this.state.shipLocationX % 3 !== 0) {
                   this.setState({ shipLocationY: 0, shipLocationX: 6, lives: this.state.lives - 1});
                 } else {
-                  this.setState({ shipLocationY: 0, shipLocationX: 6, gameLevel: this.state.gameLevel + 1, score: this.state.score + 10000});
+                  this.setState({ shipLocationY: 0, shipLocationX: 6, gameLevel: this.state.gameLevel + 1, score: this.state.score + 10000, astroidsPerRow: this.state.gameLevel + 1, nextLevel: true});
                 }
             }
           },
@@ -137,6 +141,28 @@
           },
 
           render: function() {
+            if (this.state.nextLevel) {
+              for (var i = 0; i < this.state.numberOfRows; i++) {
+                var velocity = (2 + Math.floor(Math.random() * 3));
+                var select = Math.floor(Math.random()* 2);
+                var direction = {
+                    '0': -1,
+                    '1': 1
+                };
+                this.state.rowsSpeed.push(velocity + this.state.speedAdjustment[i]);
+                this.state.rowsDirection.push(direction[select]);
+                this.state.astroidsLocation.push([]);
+                this.state.astroidsSize.push([]);
+                this.state.astroidsSelect.push([]);
+                for (var j = 0; j < this.state.astroidsPerRow; j++) {
+                  this.state.astroidsLocation[i].push(Math.floor(Math.random()* 1400));
+                  this.state.astroidsSelect[i].push(Math.floor(Math.random()* 3).toString());
+                  this.state.astroidsSize[i].push(this.state.astroidsSizeChart[this.state.astroidsSelect[i][j]]);
+                }
+              }
+              this.setState({nextLevel: false});
+            }
+
             var rows = [];
             for (var i = 0; i < this.state.numberOfRows; i++) {
               var astroids = [];
